@@ -1,0 +1,66 @@
+
+
+//Get method
+
+
+fetch('https://jsonplaceholder.typicode.com/todos/2')
+//.then(res =>console.log(res))
+.then(res =>res.json())
+.then(data =>console.log(data))
+
+
+
+// post method
+
+fetch('https://reqres.in/api/users',
+{
+method:'POST',
+headers:{
+"Content-type": "application/json"
+},
+body:JSON.stringify({
+name:'User bala'
+})
+})
+//.then(res =>console.log(res))
+.then(res =>res.json())
+.then(data =>console.log(data))
+
+
+//put method
+// for this we have to use this .id for sending key the id should be same as post id what was generated
+fetch('https://reqres.in/api/users/2',
+{
+method:'PUT',
+headers:{
+"Content-type": "application/json"
+},
+body:JSON.stringify({
+name:'User balakumar'
+})
+
+})
+//.then(res =>console.log(res))
+.then(res =>res.json())
+//console.log("data is deleted")
+.then(data =>console.log(data))
+
+
+
+
+//Delete method
+
+fetch('https://reqres.in/api/users/2',
+{
+method:'Delete',
+headers:{
+"Content-type": "application/json"
+},
+
+
+})
+//.then(res =>console.log(res))
+.then(res =>res.json())
+//console.log("data is deleted")
+.then(data =>console.log(data))
+console.log(" Data is deleted")

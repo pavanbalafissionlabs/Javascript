@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>TODO List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="path/to/font-awesome/css/font-awesome.min.css"
+    />
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+  </head>
+
+  <body>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addtaskid"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
+
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label for="recipient-name" class="col-form-label">NAME:</label>
+                <input type="text" class="form-control" id="redone" value="" />
+                <label for="recipient-name" class="col-form-label"
+                  >EXPIRY:</label
+                >
+                <input
+                  id="todaydate"
+                  type="datetime-local"
+                  class="form-control"
+                  value=""
+                />
+
+                <label for="recipient-name" class="col-form-label"
+                  >STATUS:</label
+                >
+                <select name="status" id="status">
+                  <option value="PENDING">PENDING</option>
+                  <option value="DONE">DONE</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              onclick="postRequest()"
+              type="button"
+              class="btn btn-success"
+              data-dismiss="modal"
+            >
+              ADD TASK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- model for  button for add task -->
+
+    <div>
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-toggle="modal"
+        data-target="#addtaskid"
+      >
+        ADD TASKS
+      </button>
+    </div>
+
+<div class="card">
+
+     <div class="card-body">
+  
+          <table class="table table-dark">
+            <thead id="noelements" >
+              <tr >
+                <th style="background-color:  aqua;color: black;">Name of the Task</th>
+                <th style="background-color: aqua;color: black;">Date</th>
+                <th style="background-color: aqua;color: #000;">Status</th> 
+                <th style="background-color: aqua;color: #000;">Edit</th>
+                <th style="background-color: aqua;color: black;">Delete</th>
+              </tr>
+            </thead>
+            <tbody id="table">
+            </tbody>
+             </table>
+
+     </div>
+
+</div>
+
+
+    </div>
+    
+    <script src="index.js"></script>
+    <script>
+      
+      let myPro= new Promise(function(resolve,reject)
+        {
+    var xhr = new XMLHttpRequest();
+    xhr.open( "GET","http://34.71.224.0:8080/api/tasks" , true);
+    xhr.setRequestHeader('Authorization',"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2MTc0MzMzOTl9._VY8Ao2E4a4C5_3aWpRh3HzPBJPlQ4SWdzAlMObp89r3rEx2jQXs-x_Lz7ozNDZuIdxI9zuExRUFYCQaYwfRUw");
+    xhr.withCredentials = true;
+    xhr.onload = function () {
+    var data = JSON.parse(xhr.responseText);
+    if (xhr.status >= 200 && xhr.status < 400) {
+      resolve(data);
+    }
+   else {
+    reject("Not found");
+  }
+  }
+  xhr.send();
+})
+myPro.then(function(value){
+  if(value.length===0){
+    document.getElementById("noelements").innerHTML="No Elements";
+  }
+  else{
+  for(var i=0; i<value.length; i++)
+  {
+        var table1=document.getElementById("table");
+        var row1= table1.insertRow(0);
+        var cell1= row1.insertCell(0);
+        var cell2= row1.insertCell(1);
+        var cell3= row1.insertCell(2);
+        var cell4=row1.insertCell(3);
+        var cell5=row1.insertCell(4);
+        cell1.innerHTML=value[i]['name'];
+        cell3.innerHTML=value[i]['status'];
+        cell2.innerHTML=value[i]['expiryDate'];
+        var a= document.createElement('a');
+        var link=document.createTextNode("EDIT");
+        var id=value[i]['id'];
+        a.appendChild(link);
+        a.id=id;
+        a.status=value[i]['status'];
+        a.name=value[i]['name'];
+        a.expiry=value[i]['expiryDate'];
+        a.onclick=function (){
+          var data={
+        "id":this.id,
+        "name":this.name,
+        "expiryDate":this.expiry,
+        "status":this.status
+    };
+          console.log(data);
+          if(this.status=="DONE")
+          {
+            data.status="PENDING";
+          }
+          else
+          {
+            data.status="DONE";
+          }
+          var xhr = new XMLHttpRequest();
+          xhr.open( "PUT","http://34.71.224.0:8080/api/tasks/");
+          xhr.setRequestHeader('Authorization',"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2MTc0MzMzOTl9._VY8Ao2E4a4C5_3aWpRh3HzPBJPlQ4SWdzAlMObp89r3rEx2jQXs-x_Lz7ozNDZuIdxI9zuExRUFYCQaYwfRUw");
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          xhr.withCredentials = true;
+          xhr.onload = function () {
+          if (xhr.status >= 200 && xhr.status < 400) {
+                  console.log("Success");
+          }
+          else {
+              console.log("Error");
+          }
+          }
+          xhr.send(JSON.stringify(data));
+        };
+        cell4.appendChild(a);
+        var a1= document.createElement('a');
+        a1.id=id;
+        var link=document.createTextNode("DELETE");
+        a1.appendChild(link);
+        //console.log("");
+        a1.onclick=function (obj){
+          console.log(this);
+        var xhr = new XMLHttpRequest();
+        xhr.open( "DELETE","http://34.71.224.0:8080/api/tasks/"+this.id,true);
+        xhr.setRequestHeader('Authorization',"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2MTc0MzMzOTl9._VY8Ao2E4a4C5_3aWpRh3HzPBJPlQ4SWdzAlMObp89r3rEx2jQXs-x_Lz7ozNDZuIdxI9zuExRUFYCQaYwfRUw");
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.withCredentials = true;
+        xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 400) {
+                console.log("Success");
+        }
+        else {
+            console.log("Error");
+        }
+        }
+        xhr.send();
+          };
+        //console.log("")
+        cell5.appendChild(a1);
+      }
+
+      }
+      console.log(value);
+      })
+
+</script>  
+  </body>
+</html>
